@@ -10,6 +10,7 @@ pipeline:
         connectorRef: guthubtemp
         repoName: https://github.com/maheshyadav3242/helix-h
         build: <+input>
+        sparseCheckout: []
   stages:
     - stage:
         name: git
