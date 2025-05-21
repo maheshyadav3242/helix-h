@@ -1,0 +1,53 @@
+pipeline:
+  name: solugenix
+  identifier: solugenix
+  projectIdentifier: default_project
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: guthubtemp
+        repoName: https://github.com/maheshyadav3242/helix-h
+        build: <+input>
+  stages:
+    - stage:
+        name: git
+        identifier: git
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: k8s
+              namespace: harness-delegate-ng
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: GitClone
+                  name: GitClone_1
+                  identifier: GitClone_1
+                  spec:
+                    connectorRef: guthubtemp
+                    repoName: helix-h
+                    build:
+                      type: branch
+                      spec:
+                        branch: main
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: docker
+                    repo: maheshyadav3242/mahesh_docker
+                    tags:
+                      - latest
